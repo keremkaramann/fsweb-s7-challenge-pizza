@@ -1,0 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Quattrocento:wght@400;700&family=Satisfy&display=swap");
+
+/* 
+font-family: 'Barlow', sans-serif;
+font-family: 'Quattrocento', serif;
+font-family: 'Satisfy', cursive;
+*/
+/* html {
+  font-size: 62.5%;
+} */
+
+footer {
+  background-color: rgba(21, 21, 21, 0.979);
+  color: #fff;
+  padding: 2.5rem;
+  width: 100%;
+}
+.in_container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.first-two {
+  display: flex;
+  gap: 20px;
+  /*  margin-left: 8.5rem; */
+  flex-wrap: wrap;
+}
+.first-two h3 {
+  font-family: "Barlow", sans-serif;
+  font-weight: bolder;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+}
+.footer-nav a {
+  color: rgb(210, 206, 206);
+  text-decoration: none;
+  line-height: 2.2rem;
+  font-size: 0.85rem;
+  font-family: "Barlow", sans-serif;
+}
+.insta-container {
+  width: 30%;
+  line-height: 2rem;
+  margin-top: 2rem;
+}
+.insta-container a {
+  color: #fff;
+  text-decoration: none;
+}
+.in_container h4 {
+  margin-bottom: 2rem;
+  font-family: "Barlow", sans-serif;
+  font-size: 1.3rem;
+}
+
+.img-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  gap: 10px;
+}
+.img-container img {
+  width: 29%;
+}
+footer address div {
+  display: flex;
+  gap: 10px;
+  align-content: center;
+  margin-bottom: 2rem;
+  color: rgb(210, 206, 206);
+}
+footer address img {
+  width: 7%;
+  height: 7%;
+}
+footer address {
+  font-family: "Barlow", sans-serif;
+  font-size: 0.85rem;
+}
+footer address a {
+  text-decoration: none;
+  color: rgb(210, 206, 206);
+  font-family: "Barlow", sans-serif;
+  font-size: 0.85rem;
+}
+.menu-container {
+  margin-top: 2rem;
+}
+.bottom-footer {
+  border-top: 1px solid rgb(109, 105, 105);
+  background-color: rgba(21, 21, 21, 0.979);
+  color: #fff;
+  padding: 1.4rem;
+  font-size: 1rem;
+}
+.bottom-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: rgb(210, 206, 206);
+}
+.bottom-container a {
+  text-decoration: none;
+  color: #fff;
+}
+.bottom-container p {
+  font-size: 0.7rem;
+}
+.twit-icon {
+  margin-right: 5rem;
+}
+
+/*******! responsive *********/
+
+@media (max-width: 767px) {
+  html {
+    font-size: 0.9rem;
+  }
+  footer address div {
+    justify-content: center;
+  }
+  .in_container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  .in_container h4 {
+    margin-bottom: 1rem;
+  }
+  .first-two {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 20px;
+    gap: 20px;
+    /* margin-left: 8.5rem; */
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .insta-container {
+    width: 100%;
+    text-align: center;
+  }
+
+  .menu-container {
+    margin-top: 0px;
+  }
+  .img-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    grid-gap: 10px;
+    gap: 10px;
+    justify-content: center;
+  }
+  .img-container img {
+    width: 24%;
+  }
+  .bottom-container {
+    justify-content: space-evenly;
+  }
+  .twit-icon {
+    margin-right: 0.5rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 1130px) {
+  .insta-container {
+    width: 36%;
+  }
+}
