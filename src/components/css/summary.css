@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800&family=Londrina+Solid:wght@300;400;900&family=Quattrocento:wght@400;700&family=Satisfy&display=swap");
+
+/* 
+font-family: 'Barlow', sans-serif;
+font-family: 'Londrina Solid', cursive;
+font-family: 'Quattrocento', serif;
+font-family: 'Satisfy', cursive;
+*/
+.cs-last-page {
+  background-color: #ce2829;
+  color: #fff;
+  height: 120vh;
+}
+.cs-last-page h1 {
+  text-align: center;
+  font-family: "Londrina Solid", cursive;
+  font-size: 2.5rem;
+  color: #fff;
+  padding: 1.9rem;
+}
+.cs-last-page h3 {
+  color: #fdc913;
+  font-family: "Satisfy", cursive;
+  text-align: center;
+  font-size: 2rem;
+}
+.cs-last-page h2 {
+  font-size: 3.8rem;
+  font-family: "Barlow", sans-serif;
+  text-align: center;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+.border-white-last {
+  border: 1px solid #fff;
+  width: 50%;
+  text-align: center;
+  margin: 0 auto;
+}
+.cs-item-name {
+  font-size: 2rem;
+  font-family: "Barlow", sans-serif;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.cs-orderSum-last {
+  max-width: 22%;
+  width: 100%;
+  margin: 0 auto;
+}
+.cs-orderSum-last p:first-child {
+  margin-right: 0.5rem;
+}
+.cs-orderSum-last p:nth-child(2) {
+  font-weight: bold;
+}
+.extra-order-last {
+  display: flex;
+  padding: 0.5rem;
+}
+.total-area-last {
+  max-width: 25%;
+  width: 100%;
+  margin: 3rem auto;
+  border: 1px solid #fff;
+  padding: 2rem;
+  font-weight: bold;
+  line-height: 2.5rem;
+}
+.total-num-area {
+  display: flex;
+  justify-content: space-between;
+}
+@media (max-width: 767px) {
+  .cs-orderSum-last {
+    max-width: 62%;
+  }
+  .total-area-last {
+    max-width: 63%;
+    margin: 2rem auto;
+  }
+}

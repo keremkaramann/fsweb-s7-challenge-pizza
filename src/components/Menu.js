@@ -128,7 +128,7 @@ const Menu = () => {
                       <p>{rated}/5 </p>
                       <p>({numberOfPeopleRated})</p>
                     </div>
-                    <p className="last-price">{price}</p>
+                    <p className="last-price">{price}₺</p>
                   </div>
                 </Link>
               </div>

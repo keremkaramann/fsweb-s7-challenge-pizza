@@ -5,13 +5,81 @@ import { useParams } from "react-router-dom";
 import { tabsData } from "../data/tabsData";
 import { AiFillStar } from "react-icons/ai";
 import Footer from "./Footer";
+import { useEffect } from "react";
 
 const Order = () => {
   const { id } = useParams();
   const [selectedSize, setSelectedSize] = useState("small");
+  const [selectedToppings, setSelectedToppings] = useState({
+    pepperoni: false,
+    sosis: false,
+    kanada: false,
+    tavuk: false,
+    sogan: false,
+    domates: false,
+    mısır: false,
+    sucuk: false,
+    jalepeno: false,
+    sarımsak: false,
+    biber: false,
+    kaburga: false,
+    Ananas: false,
+    kabak: false,
+  });
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalEkstra, setTotalEkstra] = useState(0);
   const [increase, setIncrease] = useState(1);
+
+  console.log(increase);
+  const [formData, setFormData] = useState({
+    size: selectedSize,
+    hamur: "",
+    note: "",
+  });
+
+  const toppingPrice = 5;
+  const maxToppings = 10;
+
+  const changeHandler = (e) => {
+    const { name, checked } = e.target;
+
+    if (name === "size") {
+      setSelectedSize(e.target.value);
+      setFormData({ ...formData, size: e.target.value });
+    } else if (name === "hamur") {
+      setFormData({ ...formData, hamur: e.target.value });
+    } else if (name === "note") {
+      setFormData({ ...formData, note: e.target.value });
+    } else {
+      const updatedToppings = {
+        ...selectedToppings,
+        [name]: checked,
+      };
+
+      // Calculate the selected toppings as an array
+      const selectedToppingsArray = Object.keys(updatedToppings).filter(
+        (topping) => updatedToppings[topping]
+      );
+
+      if (selectedToppingsArray.length <= maxToppings) {
+        const totalEkstra = selectedToppingsArray.length * toppingPrice;
+        const totalPrice = parseFloat(selectedItem.price) + totalEkstra;
+
+        setFormData({ ...formData, toppings: selectedToppingsArray });
+        setSelectedToppings(updatedToppings);
+
+        setTotalEkstra(totalEkstra);
+        setTotalPrice(totalPrice.toFixed(2));
+      } else {
+        // If more than 10 toppings are selected, don't update the state
+        e.preventDefault();
+      }
+    }
+  };
+
   const handleSelectSize = (size) => {
     setSelectedSize(size);
+    setFormData({ ...formData, size: size });
   };
 
   let selectedItem = null;
@@ -23,9 +91,18 @@ const Order = () => {
       break;
     }
   }
+  /* show initial value of total price to screen when page loaded */
+  useEffect(() => {
+    setTotalPrice(selectedItem.price);
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData);
   };
+
+  //toast
+
   return (
     <>
       <section>
@@ -56,7 +133,7 @@ const Order = () => {
               <div className="selected-item-content">
                 <h3>{selectedItem.name}</h3>
                 <div className="price-section">
-                  <p>{selectedItem.price}</p>
+                  <p>{selectedItem.price}₺</p>
                   <div className="rate-section">
                     <AiFillStar className="star-icon" />
                     <p>{selectedItem.rated}/5</p>
@@ -87,6 +164,8 @@ const Order = () => {
                 </h4>
                 <div className="button-select-size">
                   <button
+                    value="small"
+                    name="size"
                     className={`size-button ${
                       selectedSize === "small" ? "selected active" : ""
                     }`}
@@ -95,6 +174,8 @@ const Order = () => {
                     S
                   </button>
                   <button
+                    value="medium"
+                    name="size"
                     className={`size-button ${
                       selectedSize === "medium" ? "selected active" : ""
                     }`}
@@ -103,6 +184,8 @@ const Order = () => {
                     M
                   </button>
                   <button
+                    value="large"
+                    name="size"
                     className={`size-button ${
                       selectedSize === "large" ? "selected active" : ""
                     }`}
@@ -116,7 +199,12 @@ const Order = () => {
                 <h4>
                   Hamur Seç <span>*</span>
                 </h4>
-                <select name="hamur" id="hamur">
+                <select
+                  name="hamur"
+                  id="hamur"
+                  value={formData.hamur}
+                  onChange={changeHandler}
+                >
                   <option disabled selected>
                     -Hamur Kalınlığı Seç-
                   </option>
@@ -132,117 +220,175 @@ const Order = () => {
             <p>En Fazla 10 malzeme seçebilirsiniz. 5₺</p>
             <div className="checkbox-container">
               <div className="first-select">
-                <label for="pepperoni" className="container">
+                <label htmlFor="pepperoni" className="container">
                   <input
                     type="checkbox"
                     id="pepperoni"
                     name="pepperoni"
-                    value="Bike"
+                    value="pepperoni"
+                    checked={selectedToppings.pepperoni}
+                    onChange={changeHandler}
                   />
                   Pepperoni
                   <span className="checkmark"></span>
                 </label>
-                <label for="sosis" className="container">
-                  <input type="checkbox" id="sosis" name="sosis" value="Boat" />
+                <label htmlFor="sosis" className="container">
+                  <input
+                    onChange={changeHandler}
+                    type="checkbox"
+                    id="sosis"
+                    name="sosis"
+                    value="sosis"
+                    checked={selectedToppings.sosis}
+                  />
                   Sosis
                   <span className="checkmark"></span>
                 </label>
-                <label for="kanada" className="container">
+                <label htmlFor="kanada" className="container">
                   <input
                     type="checkbox"
                     id="kanada"
                     name="kanada"
                     value="kanada"
+                    checked={selectedToppings.kanada}
+                    onChange={changeHandler}
                   />
                   Kanada Jambonu
                   <span className="checkmark"></span>
                 </label>
-                <label for="tavuk" className="container">
-                  <input type="checkbox" id="tavuk" name="tavuk" value="Boat" />
+                <label htmlFor="tavuk" className="container">
+                  <input
+                    onChange={changeHandler}
+                    type="checkbox"
+                    id="tavuk"
+                    name="tavuk"
+                    value="tavuk"
+                    checked={selectedToppings.tavuk}
+                  />
                   Tavuk Izgara
                   <span className="checkmark"></span>
                 </label>
-                <label for="sogan" className="container">
-                  <input type="checkbox" id="sogan" name="sogan" value="Boat" />
+                <label htmlFor="sogan" className="container">
+                  <input
+                    onChange={changeHandler}
+                    type="checkbox"
+                    id="sogan"
+                    name="sogan"
+                    value="sogan"
+                    checked={selectedToppings.sogan}
+                  />
                   Soğan
                   <span className="checkmark"></span>
                 </label>
               </div>
               <div className="first-select">
-                <label for="domates" className="container">
+                <label htmlFor="domates" className="container">
                   <input
                     type="checkbox"
                     id="domates"
                     name="domates"
-                    value="Bike"
+                    value="domates"
+                    onChange={changeHandler}
+                    checked={selectedToppings.domates}
                   />
                   Domates
                   <span className="checkmark"></span>
                 </label>
-                <label for="mısır" className="container">
-                  <input type="checkbox" id="mısır" name="mısır" value="Boat" />
+                <label htmlFor="mısır" className="container">
+                  <input
+                    onChange={changeHandler}
+                    type="checkbox"
+                    id="mısır"
+                    name="mısır"
+                    value="mısır"
+                    checked={selectedToppings.mısır}
+                  />
                   Mısır
                   <span className="checkmark"></span>
                 </label>
-                <label for="sucuk" className="container">
+                <label htmlFor="sucuk" className="container">
                   <input
+                    onChange={changeHandler}
                     type="checkbox"
                     id="sucuk"
                     name="sucuk"
-                    value="kanada"
+                    value="sucuk"
+                    checked={selectedToppings.sucuk}
                   />
                   Sucuk
                   <span className="checkmark"></span>
                 </label>
-                <label for="jalepeno" className="container">
+                <label htmlFor="jalepeno" className="container">
                   <input
+                    onChange={changeHandler}
                     type="checkbox"
                     id="jalepeno"
                     name="jalepeno"
-                    value="Boat"
+                    value="jalepeno"
+                    checked={selectedToppings.jalepeno}
                   />
                   Jalepeno
                   <span className="checkmark"></span>
                 </label>
-                <label for="sarımsak" className="container">
+                <label htmlFor="sarımsak" className="container">
                   <input
+                    onChange={changeHandler}
                     type="checkbox"
                     id="sarımsak"
                     name="sarımsak"
-                    value="Boat"
+                    value="sarımsak"
+                    checked={selectedToppings.sarımsak}
                   />
                   Sarımsak
                   <span className="checkmark"></span>
                 </label>
               </div>
               <div className="first-select">
-                <label for="biber" className="container">
-                  <input type="checkbox" id="biber" name="biber" value="Bike" />
+                <label htmlFor="biber" className="container">
+                  <input
+                    onChange={changeHandler}
+                    type="checkbox"
+                    id="biber"
+                    name="biber"
+                    value="biber"
+                    checked={selectedToppings.biber}
+                  />
                   Biber
                   <span className="checkmark"></span>
                 </label>
-                <label for="kaburga" className="container">
+                <label htmlFor="kaburga" className="container">
                   <input
+                    onChange={changeHandler}
                     type="checkbox"
                     id="kaburga"
                     name="kaburga"
-                    value="Boat"
+                    value="kaburga"
+                    checked={selectedToppings.kaburga}
                   />
                   Kaburga
                   <span className="checkmark"></span>
                 </label>
-                <label for="Ananas" className="container">
+                <label htmlFor="Ananas" className="container">
                   <input
+                    onChange={changeHandler}
                     type="checkbox"
                     id="Ananas"
                     name="Ananas"
-                    value="kanada"
+                    value="Ananas"
+                    checked={selectedToppings.Ananas}
                   />
                   Ananas
                   <span className="checkmark"></span>
                 </label>
-                <label for="kabak" className="container">
-                  <input type="checkbox" id="kabak" name="kabak" value="Boat" />
+                <label htmlFor="kabak" className="container">
+                  <input
+                    onChange={changeHandler}
+                    type="checkbox"
+                    id="kabak"
+                    name="kabak"
+                    value="kabak"
+                    checked={selectedToppings.kabak}
+                  />
                   Kabak
                   <span className="checkmark"></span>
                 </label>
@@ -252,8 +398,9 @@ const Order = () => {
           <div className="cs-order-container">
             <div className="text-area">
               <h4>Sipariş Notu</h4>
-              <label for="note"></label>
+              <label htmlFor="note"></label>
               <input
+                onChange={changeHandler}
                 type="text"
                 id="note"
                 name="note"
@@ -267,7 +414,7 @@ const Order = () => {
               <div className="increase-btn">
                 <button
                   onClick={() => {
-                    if (increase > 0) {
+                    if (increase > 1) {
                       setIncrease(increase - 1);
                     }
                   }}
@@ -282,14 +429,30 @@ const Order = () => {
                   <h4>Sipariş Toplamı</h4>
                   <div className="in-order">
                     <p>Seçimler</p>
-                    <p>33₺</p>
+                    <p>{totalEkstra}₺</p>
                   </div>
                   <div className="red-section-last">
                     <p>Toplam</p>
-                    <p>44₺</p>
+                    <p>{(increase * totalPrice).toFixed(2)}₺</p>
                   </div>
                 </div>
-                <Link className="last-btn">SİPARİŞ VER</Link>
+                <Link
+                  to={{
+                    pathname: "/summary",
+                    state: {
+                      selectedSize,
+                      selectedToppings,
+                      formData,
+                      totalToppingsPrice: totalEkstra,
+                      totalPrice: increase * totalPrice,
+                      hamur: formData.hamur,
+                      itemName: selectedItem.name,
+                    },
+                  }}
+                  className="last-btn"
+                >
+                  SİPARİŞ VER
+                </Link>
               </div>
             </div>
           </div>
