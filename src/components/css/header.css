@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800&family=Londrina+Solid:wght@300;400;900&family=Quattrocento:wght@400;700&family=Satisfy&display=swap");
+
+/* 
+font-family: 'Barlow', sans-serif;
+font-family: 'Londrina Solid', cursive;
+font-family: 'Quattrocento', serif;
+font-family: 'Satisfy', cursive;
+*/
+/* html {
+  font-size: 62.5%;
+} */
+header {
+  background-image: url("../../Assets/mvp-banner.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  color: #fff;
+  text-align: center;
+}
+header div {
+  padding: 1.5rem;
+}
+header h1 {
+  font-size: 2.5rem;
+  font-family: "Londrina Solid", cursive;
+  margin-bottom: 1.8rem;
+}
+header p {
+  font-family: "Satisfy", cursive;
+  font-size: 1.6rem;
+  font-weight: lighter;
+  color: #fdc913;
+}
+header h2 {
+  font-family: "Barlow", sans-serif;
+  font-size: 3rem;
+  font-weight: 300;
+}
+header button {
+  padding: 0.7rem 2.8rem;
+  border-radius: 50px;
+  background-color: #fdc913;
+  border-color: #fdc913;
+  font-weight: bold;
+  font-family: "Barlow", sans-serif;
+  cursor: pointer;
+}
+header button:hover {
+  background-color: #ffff22;
+  transition: all 0.5s ease-in-out;
+}
+
+/***** icons container *********/
+.icons-container {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 1.1rem;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+.cs-icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.cs-icons img {
+  width: 30%;
+}
+.cs-icons p {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+/*******! responsive *********/
+
+@media (max-width: 767px) {
+  html {
+    font-size: 0.7rem;
+  }
+  header {
+    height: 40vh;
+  }
+  .icons-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 0.7rem;
+    justify-items: center;
+  }
+  .cs-icons {
+    gap: 0.5rem;
+  }
+  .cs-icons img {
+    width: 40%;
+  }
+}
+@media (min-width: 768px) and (max-width: 1130px) {
+  html {
+    font-size: 0.9rem;
+  }
+  header {
+    height: 65vh;
+  }
+}

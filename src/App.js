@@ -1,12 +1,19 @@
 import React from "react";
-import Footer from "./components/Footer";
 import "./App.css";
+import Header from "./components/Header";
+import { Switch } from "react-router-dom";
+import { Route } from "react-router-dom/cjs/react-router-dom.min";
+import Order from "./components/Order";
+import Error from "./components/Error";
+
 const App = () => {
   return (
     <>
-      <h1>Teknolojik Yemekler</h1>
-      <p>Burdaki kodu silip kendi headerınızı ekleyebilirsiniz</p>
-      <Footer />
+      <Switch>
+        <Route exact path="/" component={Header} />
+        <Route path="/pizza/:id" component={Order} />
+        <Route path="*" component={Error} />
+      </Switch>
     </>
   );
 };
