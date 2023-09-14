@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import "./css/summary.css";
 import Loader from "./Loader";
 const Summery = () => {
@@ -9,7 +8,7 @@ const Summery = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 3200);
+    }, 3300);
   }, []);
 
   const location = useLocation();
@@ -22,11 +21,12 @@ const Summery = () => {
     totalToppingsPrice,
     totalPrice,
   } = location.state;
-  console.log(selectedToppings);
+
   const selectedToppingsToShow = Object.keys(selectedToppings).filter(
     (topping) => selectedToppings[topping] === true
   );
   const selectedToppingsText = selectedToppingsToShow.join(", ");
+
   return (
     <>
       {loading ? (

@@ -1,5 +1,3 @@
-// menuData.js
-
 export const tabsData = {
   Pizza: [
     {

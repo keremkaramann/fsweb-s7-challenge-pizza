@@ -28,7 +28,7 @@ const Menu = () => {
               Özel <br /> Lezzetus
             </h3>
             <p>Position:Absoulute Acı Burger</p>
-            <Link to="/pizza/1" className="order-now">
+            <Link to="/pizza/1" className="order-now" data-cy="test-1">
               SİPARİŞ VER
             </Link>
           </div>
@@ -42,7 +42,7 @@ const Menu = () => {
                 Burger Menü
               </p>
 
-              <Link to="/pizza/1" className="order-now">
+              <Link to="/pizza/1" className="order-now" data-cy="test-2">
                 SİPARİŞ VER
               </Link>
             </div>
@@ -55,7 +55,7 @@ const Menu = () => {
                 hızlı <br />
                 npm gibi kurye
               </p>
-              <Link to="/pizza/1" className="order-now">
+              <Link to="/pizza/1" className="order-now" data-cy="test-3">
                 SİPARİŞ VER
               </Link>
             </div>
@@ -119,7 +119,11 @@ const Menu = () => {
 
             return (
               <div key={index} className="card-container">
-                <Link className="linkto-order" to={`/pizza/${id}`}>
+                <Link
+                  className="linkto-order"
+                  to={`/pizza/${id}`}
+                  data-cy="test-tabs-all"
+                >
                   <img src={url} alt="food_picture" />
                   <p className="first-name">{name} </p>
                   <div className="card-price">

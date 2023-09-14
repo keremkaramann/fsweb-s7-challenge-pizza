@@ -6,6 +6,7 @@ import { tabsData } from "../data/tabsData";
 import { AiFillStar } from "react-icons/ai";
 import Footer from "./Footer";
 import { useEffect } from "react";
+import * as Yup from "yup";
 
 const Order = () => {
   const { id } = useParams();
@@ -30,7 +31,12 @@ const Order = () => {
   const [totalEkstra, setTotalEkstra] = useState(0);
   const [increase, setIncrease] = useState(1);
 
-  console.log(increase);
+  //yup
+  const [formError, setFormError] = useState({
+    note: "",
+  });
+  const [isValid, setValid] = useState(false);
+  //form
   const [formData, setFormData] = useState({
     size: selectedSize,
     hamur: "",
@@ -40,16 +46,20 @@ const Order = () => {
   const toppingPrice = 5;
   const maxToppings = 10;
 
-  const changeHandler = (e) => {
-    const { name, checked } = e.target;
+  const changeHandler = async (e) => {
+    const { name, checked, value } = e.target;
 
-    if (name === "size") {
+    /* if (name === "size") {
       setSelectedSize(e.target.value);
       setFormData({ ...formData, size: e.target.value });
     } else if (name === "hamur") {
       setFormData({ ...formData, hamur: e.target.value });
     } else if (name === "note") {
       setFormData({ ...formData, note: e.target.value });
+    }  */
+
+    if (name === "size" || name === "hamur" || name === "note") {
+      setFormData({ ...formData, [name]: value });
     } else {
       const updatedToppings = {
         ...selectedToppings,
@@ -75,6 +85,15 @@ const Order = () => {
         e.preventDefault();
       }
     }
+    try {
+      // Validate the form data using the Yup schema
+      await noteSchema.validate(formData, { abortEarly: false });
+      setFormError({ note: "" }); // Clear any previous error
+    } catch (error) {
+      // Handle Yup validation error
+      const errorMessage = error.errors.join(", "); // Combine multiple errors
+      setFormError({ note: errorMessage }); // Set the error message in state
+    }
   };
 
   const handleSelectSize = (size) => {
@@ -91,18 +110,31 @@ const Order = () => {
       break;
     }
   }
-  /* show initial value of total price to screen when page loaded */
-  useEffect(() => {
-    setTotalPrice(selectedItem.price);
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
   };
 
-  //toast
+  //yup
+  const noteSchema = Yup.object().shape({
+    note: Yup.string().matches(
+      /^[A-Za-z0-9\s]*$/,
+      "Özel Karakter Yazamazsınız"
+    ),
+  });
 
+  /* show initial value of total price to screen when page loaded */
+  useEffect(() => {
+    setTotalPrice(selectedItem.price);
+  }, []);
+
+  //form validation error message
+  useEffect(() => {
+    noteSchema.isValid(formData).then((valid) => {
+      setValid(valid);
+    });
+  }, [formData]);
   return (
     <>
       <section>
@@ -131,7 +163,7 @@ const Order = () => {
             </div>
             {selectedItem && (
               <div className="selected-item-content">
-                <h3>{selectedItem.name}</h3>
+                <h3 data-cy="food-name">{selectedItem.name}</h3>
                 <div className="price-section">
                   <p>{selectedItem.price}₺</p>
                   <div className="rate-section">
@@ -174,6 +206,7 @@ const Order = () => {
                     S
                   </button>
                   <button
+                    data-cy="btn-medium"
                     value="medium"
                     name="size"
                     className={`size-button ${
@@ -204,6 +237,7 @@ const Order = () => {
                   id="hamur"
                   value={formData.hamur}
                   onChange={changeHandler}
+                  data-cy="select-hamur"
                 >
                   <option disabled selected>
                     -Hamur Kalınlığı Seç-
@@ -228,6 +262,7 @@ const Order = () => {
                     value="pepperoni"
                     checked={selectedToppings.pepperoni}
                     onChange={changeHandler}
+                    data-cy="pepperoni-checked"
                   />
                   Pepperoni
                   <span className="checkmark"></span>
@@ -398,6 +433,9 @@ const Order = () => {
           <div className="cs-order-container">
             <div className="text-area">
               <h4>Sipariş Notu</h4>
+              {formError.note && (
+                <p className="error-message">{formError.note}</p>
+              )}
               <label htmlFor="note"></label>
               <input
                 onChange={changeHandler}
@@ -405,6 +443,7 @@ const Order = () => {
                 id="note"
                 name="note"
                 placeholder="Siparişine eklemek istediğin bir not var mı?"
+                data-cy="order-note"
               />
             </div>
           </div>
@@ -421,8 +460,13 @@ const Order = () => {
                 >
                   -
                 </button>
-                <p>{increase}</p>
-                <button onClick={() => setIncrease(increase + 1)}>+</button>
+                <p data-cy="btn-value">{increase}</p>
+                <button
+                  data-cy="btn-increase"
+                  onClick={() => setIncrease(increase + 1)}
+                >
+                  +
+                </button>
               </div>
               <div className="last-order-cont">
                 <div className="p-12">
