@@ -48,12 +48,20 @@ const Summery = () => {
           </div>
           <div className="cs-orderSum-last">
             <div className="extra-order-last">
-              <p>Boyut:</p>
-              <p>{selectedSize}</p>
+              {hamur && (
+                <>
+                  <p>Boyut:</p>
+                  <p>{selectedSize}</p>
+                </>
+              )}
             </div>
             <div className="extra-order-last">
-              <p>Hamur:</p>
-              <p>{hamur}</p>
+              {hamur && (
+                <>
+                  <p>Hamur:</p>
+                  <p>{hamur}</p>
+                </>
+              )}
             </div>
             <div className="extra-order-last">
               {selectedToppingsToShow.length > 0 && (
@@ -76,8 +84,12 @@ const Summery = () => {
             <p>Sipariş Toplamı</p>
             <div>
               <div className="total-num-area">
-                <p>Seçimler</p>
-                <p>{totalToppingsPrice}₺</p>
+                {hamur && (
+                  <>
+                    <p>Seçimler</p>
+                    <p>{totalToppingsPrice}₺</p>
+                  </>
+                )}
               </div>
               <div className="total-num-area">
                 <p>Toplam</p>

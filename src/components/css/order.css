@@ -293,6 +293,7 @@ input[type="checkbox"]:checked {
 }
 .p-12 {
   padding: 1.6rem;
+  border-radius: 5px;
 }
 .last-btn {
   text-decoration: none;
@@ -301,6 +302,18 @@ input[type="checkbox"]:checked {
   width: 100%;
   display: block;
   text-align: center;
+  cursor: pointer;
+  padding: 1rem;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: transparent;
+  font-family: "Barlow", sans-serif;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #ce2829;
+  margin-bottom: 1rem;
 }
 
 /*******! responsive *********/
@@ -321,7 +334,7 @@ input[type="checkbox"]:checked {
     max-width: 90%;
     width: 100%;
     margin: 0 auto;
-    padding: 1.7rem;
+    padding: 1rem;
   }
   .size-select-cont {
     display: flex;

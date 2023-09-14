@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useHistory } from "react-router-dom";
 import "./css/order.css";
 import { useParams } from "react-router-dom";
 import { tabsData } from "../data/tabsData";
@@ -9,7 +9,9 @@ import { useEffect } from "react";
 import * as Yup from "yup";
 
 const Order = () => {
+  const history = useHistory();
   const { id } = useParams();
+
   const [selectedSize, setSelectedSize] = useState("small");
   const [selectedToppings, setSelectedToppings] = useState({
     pepperoni: false,
@@ -27,6 +29,7 @@ const Order = () => {
     Ananas: false,
     kabak: false,
   });
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalEkstra, setTotalEkstra] = useState(0);
   const [increase, setIncrease] = useState(1);
@@ -46,17 +49,8 @@ const Order = () => {
   const toppingPrice = 5;
   const maxToppings = 10;
 
-  const changeHandler = async (e) => {
+  const changeHandler = (e) => {
     const { name, checked, value } = e.target;
-
-    /* if (name === "size") {
-      setSelectedSize(e.target.value);
-      setFormData({ ...formData, size: e.target.value });
-    } else if (name === "hamur") {
-      setFormData({ ...formData, hamur: e.target.value });
-    } else if (name === "note") {
-      setFormData({ ...formData, note: e.target.value });
-    }  */
 
     if (name === "size" || name === "hamur" || name === "note") {
       setFormData({ ...formData, [name]: value });
@@ -85,15 +79,15 @@ const Order = () => {
         e.preventDefault();
       }
     }
-    try {
-      // Validate the form data using the Yup schema
-      await noteSchema.validate(formData, { abortEarly: false });
-      setFormError({ note: "" }); // Clear any previous error
-    } catch (error) {
-      // Handle Yup validation error
-      const errorMessage = error.errors.join(", "); // Combine multiple errors
-      setFormError({ note: errorMessage }); // Set the error message in state
-    }
+
+    noteSchema.isValid(formData).then((valid) => {
+      if (valid) {
+        setFormError({ note: "" }); // Clear any previous error
+      } else {
+        const errorMessage = "Özel Karakter Yazamazsınız*"; // You can customize the error message
+        setFormError({ note: errorMessage }); // Set the error message in state
+      }
+    });
   };
 
   const handleSelectSize = (size) => {
@@ -102,7 +96,6 @@ const Order = () => {
   };
 
   let selectedItem = null;
-
   for (const categoryKey in tabsData) {
     const category = tabsData[categoryKey];
     selectedItem = category.find((item) => item.id === parseInt(id));
@@ -111,17 +104,30 @@ const Order = () => {
     }
   }
 
+  console.log(selectedItem);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    if (formError.note === "" && isValid) {
+      // Form is valid, navigate programmatically to the summary page
+      history.push({
+        pathname: "/summary",
+        state: {
+          selectedSize,
+          selectedToppings,
+          formData,
+          totalToppingsPrice: totalEkstra,
+          totalPrice: increase * totalPrice,
+          hamur: formData.hamur,
+          itemName: selectedItem.name,
+        },
+      });
+    }
   };
 
   //yup
   const noteSchema = Yup.object().shape({
-    note: Yup.string().matches(
-      /^[A-Za-z0-9\s]*$/,
-      "Özel Karakter Yazamazsınız"
-    ),
+    note: Yup.string().matches(/^[A-Za-z0-9\sşŞıİğĞüÜöÖçÇ?!.,]*$/),
   });
 
   /* show initial value of total price to screen when page loaded */
@@ -135,6 +141,7 @@ const Order = () => {
       setValid(valid);
     });
   }, [formData]);
+  const allowedIds = [1, 2, 3, 17];
   return (
     <>
       <section>
@@ -188,248 +195,256 @@ const Order = () => {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="cs-order-container">
-            <div className="size-select-cont">
-              <div className="pizza-size">
-                <h4>
-                  Boyut Seç <span>*</span>
-                </h4>
-                <div className="button-select-size">
-                  <button
-                    value="small"
-                    name="size"
-                    className={`size-button ${
-                      selectedSize === "small" ? "selected active" : ""
-                    }`}
-                    onClick={() => handleSelectSize("small")}
-                  >
-                    S
-                  </button>
-                  <button
-                    data-cy="btn-medium"
-                    value="medium"
-                    name="size"
-                    className={`size-button ${
-                      selectedSize === "medium" ? "selected active" : ""
-                    }`}
-                    onClick={() => handleSelectSize("medium")}
-                  >
-                    M
-                  </button>
-                  <button
-                    value="large"
-                    name="size"
-                    className={`size-button ${
-                      selectedSize === "large" ? "selected active" : ""
-                    }`}
-                    onClick={() => handleSelectSize("large")}
-                  >
-                    L
-                  </button>
+          {selectedItem && allowedIds.includes(selectedItem.id) && (
+            <>
+              <div className="cs-order-container">
+                <div className="size-select-cont">
+                  <div className="pizza-size">
+                    <h4>
+                      Boyut Seç <span>*</span>
+                    </h4>
+                    <div className="button-select-size">
+                      <button
+                        type="button"
+                        value="small"
+                        name="size"
+                        className={`size-button ${
+                          selectedSize === "small" ? "selected active" : ""
+                        }`}
+                        onClick={() => handleSelectSize("small")}
+                      >
+                        S
+                      </button>
+                      <button
+                        type="button"
+                        data-cy="btn-medium"
+                        value="medium"
+                        name="size"
+                        className={`size-button ${
+                          selectedSize === "medium" ? "selected active" : ""
+                        }`}
+                        onClick={() => handleSelectSize("medium")}
+                      >
+                        M
+                      </button>
+                      <button
+                        type="button"
+                        value="large"
+                        name="size"
+                        className={`size-button ${
+                          selectedSize === "large" ? "selected active" : ""
+                        }`}
+                        onClick={() => handleSelectSize("large")}
+                      >
+                        L
+                      </button>
+                    </div>
+                  </div>
+                  <div className="select-input">
+                    <h4>
+                      Hamur Seç <span>*</span>
+                    </h4>
+                    <select
+                      name="hamur"
+                      id="hamur"
+                      value={formData.hamur}
+                      onChange={changeHandler}
+                      data-cy="select-hamur"
+                    >
+                      <option disabled selected>
+                        -Hamur Kalınlığı Seç-
+                      </option>
+                      <option value="ince">İnce</option>
+                      <option value="orta">Orta</option>
+                      <option value="kalın">Kalın</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div className="select-input">
-                <h4>
-                  Hamur Seç <span>*</span>
-                </h4>
-                <select
-                  name="hamur"
-                  id="hamur"
-                  value={formData.hamur}
-                  onChange={changeHandler}
-                  data-cy="select-hamur"
-                >
-                  <option disabled selected>
-                    -Hamur Kalınlığı Seç-
-                  </option>
-                  <option value="ince">İnce</option>
-                  <option value="orta">Orta</option>
-                  <option value="kalın">Kalın</option>
-                </select>
+
+              <div className="cs-order-container">
+                <h4 className="h4-checkbox">Ek Malzemeler</h4>
+                <p>En Fazla 10 malzeme seçebilirsiniz. 5₺</p>
+                <div className="checkbox-container">
+                  <div className="first-select">
+                    <label htmlFor="pepperoni" className="container">
+                      <input
+                        type="checkbox"
+                        id="pepperoni"
+                        name="pepperoni"
+                        value="pepperoni"
+                        checked={selectedToppings.pepperoni}
+                        onChange={changeHandler}
+                        data-cy="pepperoni-checked"
+                      />
+                      Pepperoni
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="sosis" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="sosis"
+                        name="sosis"
+                        value="sosis"
+                        checked={selectedToppings.sosis}
+                      />
+                      Sosis
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="kanada" className="container">
+                      <input
+                        type="checkbox"
+                        id="kanada"
+                        name="kanada"
+                        value="kanada"
+                        checked={selectedToppings.kanada}
+                        onChange={changeHandler}
+                      />
+                      Kanada Jambonu
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="tavuk" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="tavuk"
+                        name="tavuk"
+                        value="tavuk"
+                        checked={selectedToppings.tavuk}
+                      />
+                      Tavuk Izgara
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="sogan" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="sogan"
+                        name="sogan"
+                        value="sogan"
+                        checked={selectedToppings.sogan}
+                      />
+                      Soğan
+                      <span className="checkmark"></span>
+                    </label>
+                  </div>
+                  <div className="first-select">
+                    <label htmlFor="domates" className="container">
+                      <input
+                        type="checkbox"
+                        id="domates"
+                        name="domates"
+                        value="domates"
+                        onChange={changeHandler}
+                        checked={selectedToppings.domates}
+                      />
+                      Domates
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="mısır" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="mısır"
+                        name="mısır"
+                        value="mısır"
+                        checked={selectedToppings.mısır}
+                      />
+                      Mısır
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="sucuk" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="sucuk"
+                        name="sucuk"
+                        value="sucuk"
+                        checked={selectedToppings.sucuk}
+                      />
+                      Sucuk
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="jalepeno" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="jalepeno"
+                        name="jalepeno"
+                        value="jalepeno"
+                        checked={selectedToppings.jalepeno}
+                      />
+                      Jalepeno
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="sarımsak" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="sarımsak"
+                        name="sarımsak"
+                        value="sarımsak"
+                        checked={selectedToppings.sarımsak}
+                      />
+                      Sarımsak
+                      <span className="checkmark"></span>
+                    </label>
+                  </div>
+                  <div className="first-select">
+                    <label htmlFor="biber" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="biber"
+                        name="biber"
+                        value="biber"
+                        checked={selectedToppings.biber}
+                      />
+                      Biber
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="kaburga" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="kaburga"
+                        name="kaburga"
+                        value="kaburga"
+                        checked={selectedToppings.kaburga}
+                      />
+                      Kaburga
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="Ananas" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="Ananas"
+                        name="Ananas"
+                        value="Ananas"
+                        checked={selectedToppings.Ananas}
+                      />
+                      Ananas
+                      <span className="checkmark"></span>
+                    </label>
+                    <label htmlFor="kabak" className="container">
+                      <input
+                        onChange={changeHandler}
+                        type="checkbox"
+                        id="kabak"
+                        name="kabak"
+                        value="kabak"
+                        checked={selectedToppings.kabak}
+                      />
+                      Kabak
+                      <span className="checkmark"></span>
+                    </label>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="cs-order-container">
-            <h4 className="h4-checkbox">Ek Malzemeler</h4>
-            <p>En Fazla 10 malzeme seçebilirsiniz. 5₺</p>
-            <div className="checkbox-container">
-              <div className="first-select">
-                <label htmlFor="pepperoni" className="container">
-                  <input
-                    type="checkbox"
-                    id="pepperoni"
-                    name="pepperoni"
-                    value="pepperoni"
-                    checked={selectedToppings.pepperoni}
-                    onChange={changeHandler}
-                    data-cy="pepperoni-checked"
-                  />
-                  Pepperoni
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="sosis" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="sosis"
-                    name="sosis"
-                    value="sosis"
-                    checked={selectedToppings.sosis}
-                  />
-                  Sosis
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="kanada" className="container">
-                  <input
-                    type="checkbox"
-                    id="kanada"
-                    name="kanada"
-                    value="kanada"
-                    checked={selectedToppings.kanada}
-                    onChange={changeHandler}
-                  />
-                  Kanada Jambonu
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="tavuk" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="tavuk"
-                    name="tavuk"
-                    value="tavuk"
-                    checked={selectedToppings.tavuk}
-                  />
-                  Tavuk Izgara
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="sogan" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="sogan"
-                    name="sogan"
-                    value="sogan"
-                    checked={selectedToppings.sogan}
-                  />
-                  Soğan
-                  <span className="checkmark"></span>
-                </label>
-              </div>
-              <div className="first-select">
-                <label htmlFor="domates" className="container">
-                  <input
-                    type="checkbox"
-                    id="domates"
-                    name="domates"
-                    value="domates"
-                    onChange={changeHandler}
-                    checked={selectedToppings.domates}
-                  />
-                  Domates
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="mısır" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="mısır"
-                    name="mısır"
-                    value="mısır"
-                    checked={selectedToppings.mısır}
-                  />
-                  Mısır
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="sucuk" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="sucuk"
-                    name="sucuk"
-                    value="sucuk"
-                    checked={selectedToppings.sucuk}
-                  />
-                  Sucuk
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="jalepeno" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="jalepeno"
-                    name="jalepeno"
-                    value="jalepeno"
-                    checked={selectedToppings.jalepeno}
-                  />
-                  Jalepeno
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="sarımsak" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="sarımsak"
-                    name="sarımsak"
-                    value="sarımsak"
-                    checked={selectedToppings.sarımsak}
-                  />
-                  Sarımsak
-                  <span className="checkmark"></span>
-                </label>
-              </div>
-              <div className="first-select">
-                <label htmlFor="biber" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="biber"
-                    name="biber"
-                    value="biber"
-                    checked={selectedToppings.biber}
-                  />
-                  Biber
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="kaburga" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="kaburga"
-                    name="kaburga"
-                    value="kaburga"
-                    checked={selectedToppings.kaburga}
-                  />
-                  Kaburga
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="Ananas" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="Ananas"
-                    name="Ananas"
-                    value="Ananas"
-                    checked={selectedToppings.Ananas}
-                  />
-                  Ananas
-                  <span className="checkmark"></span>
-                </label>
-                <label htmlFor="kabak" className="container">
-                  <input
-                    onChange={changeHandler}
-                    type="checkbox"
-                    id="kabak"
-                    name="kabak"
-                    value="kabak"
-                    checked={selectedToppings.kabak}
-                  />
-                  Kabak
-                  <span className="checkmark"></span>
-                </label>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
           <div className="cs-order-container">
             <div className="text-area">
               <h4>Sipariş Notu</h4>
@@ -452,6 +467,7 @@ const Order = () => {
             <div className="increase-cont">
               <div className="increase-btn">
                 <button
+                  type="button"
                   onClick={() => {
                     if (increase > 1) {
                       setIncrease(increase - 1);
@@ -462,6 +478,7 @@ const Order = () => {
                 </button>
                 <p data-cy="btn-value">{increase}</p>
                 <button
+                  type="button"
                   data-cy="btn-increase"
                   onClick={() => setIncrease(increase + 1)}
                 >
@@ -480,23 +497,14 @@ const Order = () => {
                     <p>{(increase * totalPrice).toFixed(2)}₺</p>
                   </div>
                 </div>
-                <Link
-                  to={{
-                    pathname: "/summary",
-                    state: {
-                      selectedSize,
-                      selectedToppings,
-                      formData,
-                      totalToppingsPrice: totalEkstra,
-                      totalPrice: increase * totalPrice,
-                      hamur: formData.hamur,
-                      itemName: selectedItem.name,
-                    },
-                  }}
+                <button
                   className="last-btn"
+                  disabled={formError.note !== "" || !isValid}
+                  onClick={handleSubmit}
+                  type="submit"
                 >
                   SİPARİŞ VER
-                </Link>
+                </button>
               </div>
             </div>
           </div>
