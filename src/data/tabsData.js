@@ -1,3 +1,5 @@
+import pizza1 from "../Assets/adv-aseets/cropped-klasik-pizza.png";
+import pizza3 from "../Assets/adv-aseets/cafe-jungle-madness-pizza-3.png";
 export const tabsData = {
   Pizza: [
     {
@@ -6,7 +8,7 @@ export const tabsData = {
       price: "15.99",
       rated: 4,
       numberOfPeopleRated: 250,
-      url: "https://png2.cleanpng.com/sh/cbc83e865b0ca222b78149de631cd5c7/L0KzQYi4UsIxN6Fpj5GAYUPkcom3WcI4OJU4SpCBOUK2R4S4V8E2OWQ8UakBNEG0Roa6UccveJ9s/5a3ab809270d32.692373171513797641165317.png",
+      url: pizza1,
     },
     {
       id: 2,
@@ -22,7 +24,7 @@ export const tabsData = {
       price: "29.99",
       rated: 4.2,
       numberOfPeopleRated: 200,
-      url: "https://www.odaypizza.com.tr/images/urunler/fume-kaburgali_173fe.png",
+      url: pizza3,
     },
   ],
   Burger: [
