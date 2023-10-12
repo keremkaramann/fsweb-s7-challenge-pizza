@@ -46,22 +46,22 @@ const Footer = () => {
             <div className="menu-container">
               <h4>Hot Menu</h4>
               <nav className="footer-nav">
-                <a href="#" target="_blank">
+                <a href="https://example.com/tavuklu-pizza" target="_blank">
                   Terminal Pizza
                 </a>
-                <a href="#" target="_blank">
+                <a href="https://example.com/tavuklu-pizza" target="_blank">
                   5 Kişilik Hackathlon Pizza
                 </a>
-                <a href="#" target="_blank">
+                <a href="https://example.com/tavuklu-pizza" target="_blank">
                   useEffect Tavuklu Pizza
                 </a>
-                <a href="#" target="_blank">
+                <a href="https://example.com/tavuklu-pizza" target="_blank">
                   Beyaz Console Frosty
                 </a>
-                <a href="#" target="_blank">
+                <a href="https://example.com/tavuklu-pizza" target="_blank">
                   Testler Geçti Mutlu Burger
                 </a>
-                <a href="#" target="_blank">
+                <a href="https://example.com/tavuklu-pizza" target="_blank">
                   Position Absolute Acı Burger
                 </a>
               </nav>
@@ -85,7 +85,7 @@ const Footer = () => {
       <div className="bottom-footer">
         <div className="bottom-container">
           <p>&copy; 2023 Teknolojik Yemekler</p>
-          <a href="twitter">
+          <a href="https://example.com/tavuklu-pizza">
             <AiOutlineTwitter className="twit-icon" />
           </a>
         </div>
