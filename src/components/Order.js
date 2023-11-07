@@ -142,6 +142,9 @@ const Order = () => {
     });
   }, [formData]);
   const allowedIds = [1, 2, 3, 17];
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <section>

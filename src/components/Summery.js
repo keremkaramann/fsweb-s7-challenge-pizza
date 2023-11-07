@@ -5,12 +5,6 @@ import Loader from "./Loader";
 const Summery = () => {
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 3300);
-  }, []);
-
   const location = useLocation();
   const {
     itemName,
@@ -26,7 +20,14 @@ const Summery = () => {
     (topping) => selectedToppings[topping] === true
   );
   const selectedToppingsText = selectedToppingsToShow.join(", ");
-
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3300);
+  }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       {loading ? (
